@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
+from django.template.loader import render_to_string
 
 # Import view function
 from lists.views import home_page # home_page is the view function stored in lists/views.py
@@ -22,6 +23,8 @@ class HomePageTest(TestCase):
 	def test_home_page_returns_correct_html(self):
 		request = HttpRequest() # An HttpRequest object, this is what Django sees when a user's browser asks for a page
 		response = home_page(request) # We pass this request to our home_page view, which gives a reponse in form of an HttpResponse object
+		expected_html = render_to_string('home.html')
+		self.assertEqual(response.content.decode(), expected_html)
 		
 		self.assertTrue(response.content.startswith(b'<html>'))
 		self.assertIn(b'<title>To-Do lists</title>', response.content)
@@ -30,4 +33,4 @@ class HomePageTest(TestCase):
 		# NB: response.content is the HTML contents of the HttpResponse object
 		
 		# NB: response.content is in raw bytes, not a Python string, so
-		# we have to use the b'' syntax to compare them
+		# we have to use the b'' syntax to compare them (converts string to bytes)
