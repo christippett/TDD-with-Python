@@ -10,12 +10,15 @@ class NewVisitorTest(unittest.TestCase): # Tests are organised into classes, whi
 		# NB: implicitly_wait won't work for every use case. More sophisticated
 		# 'explicit' wait algorithms may be needed as apps grow in complexity
 		
-	def tearDown(self): # This method runs after each test. This method will run even if the test fails and causes an error
+	def tearDown(self): # This method runs after each test. This method will run even if the test fails and causes an error (unless an error occurs in the setUp method)
 		self.browser.quit()
 		
 	def test_can_start_a_list_and_retrieve_it_later(self): # Any method whose name starts with 'test' is a test method, and will be run by the test runner. You can have more than one test_ method per class
 		
-		# Edit has heard about a cool new online to-do app. She goes
+		# NB: It is useful to write a story as to how the user will use
+		# and interact with your app, hence the introduction of 'Edith'
+		
+		# Edith has heard about a cool new online to-do app. She goes
 		# to check out its homepage
 		self.browser.get('http://localhost:8000')
 		
