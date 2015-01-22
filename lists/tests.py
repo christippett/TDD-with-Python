@@ -34,3 +34,17 @@ class HomePageTest(TestCase):
 		
 		# NB: response.content is in raw bytes, not a Python string, so
 		# we have to use the b'' syntax to compare them (converts string to bytes)
+		
+	def test_home_page_can_save_a_POST_request(self):
+		request = HttpRequest()
+		request.method = 'POST'
+		request.POST['item_text'] = 'A new list item'
+		
+		response = home_page(request)
+		
+		self.assertIn('A new list item', response.content.decode())
+		expected_html = render_to_string(
+			'home.html',
+			{'new_item_text': 'A new list item'}
+		)
+		self.assertEqual(response.content.decode(), expected_html)
