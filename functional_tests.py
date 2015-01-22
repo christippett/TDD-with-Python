@@ -19,6 +19,11 @@ class NewVisitorTest(unittest.TestCase): # Tests are organised into classes, whi
 	def tearDown(self): # This method runs after each test. This method will run even if the test fails and causes an error (unless an error occurs in the setUp method)
 		self.browser.quit()
 		
+	def check_for_row_in_list_table(self, row_text):
+		table = self.browser.find_element_by_id('id_list_table')
+		rows = table.find_elements_by_tag_name('tr')
+		self.assertIn(row_text, [row.text for row in rows])
+		
 	def test_can_start_a_list_and_retrieve_it_later(self): # Any method whose name starts with 'test' is a test method, and will be run by the test runner. You can have more than one test_ method per class
 		
 		# NB: It is useful to write a story as to how the user will use
@@ -47,33 +52,39 @@ class NewVisitorTest(unittest.TestCase): # Tests are organised into classes, whi
 		# When she hits enter, the page updates. The page now lists
 		# "1: Buy peacock feathers" as an item in the to-do list
 		inputbox.send_keys(Keys.ENTER)
+		self.check_for_row_in_list_table('1: Buy peacock feathers')
 		
-		# import time
-		# time.sleep(10)
+# 		import time
+# 		time.sleep(10)
 		
-		table = self.browser.find_element_by_id('id_list_table')
-		rows = table.find_elements_by_tag_name('tr')
+# 		table = self.browser.find_element_by_id('id_list_table')
+# 		rows = table.find_elements_by_tag_name('tr')
 # 		self.assertTrue(
 # 			any(row.text == '1: Buy peacock feathers' for row in rows), # any() is a Python built-in function
 # 			"New to-do item did not appear in table -- its text was:\n%s" % (table.text,)
 # 		)
 
-		self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
-		self.assertIn(
-			'2: Use peacock feathers to make a fly' ,
-			[row.text for row in rows]
-		)
-		
+# 		self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+# 		self.assertIn(
+# 			'2: Use peacock feathers to make a fly' ,
+# 			[row.text for row in rows]
+# 		)
+
 		# There is still a text box inviting her to add another item
 		# She enters "Use peacock feathers to make a fly"
-		self.fail('Finish the test!')
-
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		inputbox.send_keys('Use peacock feathers to make a fly')
+		inputbox.send_keys(Keys.ENTER)
 		
 		# The page updates again and shows both items in the list
+		self.check_for_row_in_list_table('1: Buy peacock feathers')
+		self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
 		
 		# Edit wonders whether the site will remember her list. She
 		# sees the site has generated a unique URL for her -- there is
 		# some explantory text to that effect
+		self.fail('Finish the test!')
+
 		
 		# She visits that URL - her to-do list is still there
 		
