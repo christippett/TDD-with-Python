@@ -14,10 +14,20 @@
 				{% csrf_token %}
 			</form>
 			
+<!--
 			<table id="id_list_table">
 				<tr>
 					<td>1: {{ new_item_text }}</td>
 				</tr>
+			</table>
+-->
+
+			<table id="id_list_table">
+				{% for item in items %}
+				<tr>
+					<td>{{ forloop.counter }}: {{ item.text }}</td>
+				</tr>
+				{% endfor %}
 			</table>
 		</div>
 	</body>

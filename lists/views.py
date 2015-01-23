@@ -1,17 +1,61 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from lists.models import Item
+# from django.http import HttpResponse # no longer needed since we're rendering page using template engine
 
 # Create your views here.
 # home_page = None
 
-def home_page(request):
-# 	return HttpResponse('<html><title>To-Do lists</title></html>')
+# ======================
+# ITERATION 1
+# ======================
+# def home_page(request):
+# # 	return HttpResponse('<html><title>To-Do lists</title></html>')
+# # 	if request.method == 'POST':
+# # 		return HttpResponse(request.POST['item_text'])
+# 
+# 	item = Item()
+# 	item.text = request.POST.get('item_text', '')
+# 	item.save()
+# 	
+# 	return render(
+# 		request, 
+# 		'home.html',
+# 		{'new_item_text': request.POST.get('item_text', ''),}
+# 	)
+
+# ======================
+# ITERATION 2
+# ======================
+# def home_page(request):
 # 	if request.method == 'POST':
-# 		return HttpResponse(request.POST['item_text'])
-	
+# 		new_item_text = request.POST['item_text']
+# 		Item.objects.create(text=new_item_text) # shorthand for creating a new Item, without needing to call .save()
+# 	else:
+# 		new_item_text = ''
+# 	
+# 	return render(
+# 		request, 
+# 		'home.html',
+# 		{'new_item_text': request.POST.get('item_text', ''),}
+# 	)
+
+# ======================
+# ITERATION 2
+# ======================
+def home_page(request):
+	if request.method == 'POST':
+		Item.objects.create(text=request.POST['item_text']) 
+		return redirect('/')
+			
+# 	return render(
+# 		request, 
+# 		'home.html',
+# 		{'new_item_text': request.POST.get('item_text', ''),}
+# 	)
+
+	items = Item.objects.all()
 	return render(
 		request, 
 		'home.html',
-		{'new_item_text': request.POST.get('item_text', ''),}
+		{'items': items,}
 	)
-
