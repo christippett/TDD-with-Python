@@ -1,13 +1,14 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
+# import unittest
 
 # NB: unittest provides helper functions such as assertIn, 
 # assertEqual, assertTrue, assertFalse, etc - see unittest 
 # documentation for more information
 
 
-class NewVisitorTest(unittest.TestCase): # Tests are organised into classes, which inherit from unittest.TestCase
+class NewVisitorTest(LiveServerTestCase): # Tests are organised into classes, which inherit from unittest.TestCase
 	
 	def setUp(self): # This method runs before each test
 		self.browser = webdriver.Firefox()
@@ -31,13 +32,14 @@ class NewVisitorTest(unittest.TestCase): # Tests are organised into classes, whi
 		
 		# Edith has heard about a cool new online to-do app. She goes
 		# to check out its homepage
-		self.browser.get('http://localhost:8000')
+# 		self.browser.get('http://localhost:8000')
+		self.browser.get(self.live_server_url)
 		
 		# She notices the page title and head mention to-do lists
 		self.assertIn('To-Do', self.browser.title)
 		
 		header_text = self.browser.find_element_by_tag_name('h1').text
-		self.assertEqual('To-Do', header_text)
+		self.assertIn('To Do', header_text)
 				
 		# She is invited to enter a to-do item straight away
 		inputbox = self.browser.find_element_by_id('id_new_item')
