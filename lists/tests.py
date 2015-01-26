@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from lists.models import Item
 
 # Import view function
-from lists.views import home_page # home_page is the view function stored in lists/views.py
+from lists.views import home_page, view_list # home_page is the view function stored in lists/views.py
 
 # TestCase is an augmented version of the standard unittest.TestCase,
 # with some Django-specific features thrown in
@@ -55,10 +55,9 @@ class HomePageTest(TestCase):
 		response = home_page(request)
 		
 		self.assertEqual(response.status_code, 302)
-		self.assertEqual(response['location'], '/')
-
+		# self.assertEqual(response['location'], '/')
+		self.assertEqual(response['location'], '/lists/the-only-list-in-the-world/')
 		
-# 		self.assertIn('A new list item', response.content.decode())
 # 		expected_html = render_to_string(
 # 			'home.html',
 # 			{'new_item_text': 'A new list item'}
@@ -70,15 +69,15 @@ class HomePageTest(TestCase):
 		home_page(request)
 		self.assertEqual(Item.objects.count(), 0)
 		
-	def test_home_page_displays_all_list_items(self):
-		Item.objects.create(text='itemey 1')
-		Item.objects.create(text='itemey 2')
+	# def test_home_page_displays_all_list_items(self):
+	# 	Item.objects.create(text='itemey 1')
+	# 	Item.objects.create(text='itemey 2')
 		
-		request = HttpRequest()
-		response = home_page(request)
+	# 	request = HttpRequest()
+	# 	response = home_page(request)
 		
-		self.assertIn('itemey 1', response.content.decode())
-		self.assertIn('itemey 2', response.content.decode())
+	# 	self.assertIn('itemey 1', response.content.decode())
+	# 	self.assertIn('itemey 2', response.content.decode())
 		
 class ItemModelTest(TestCase):
 	
@@ -98,4 +97,31 @@ class ItemModelTest(TestCase):
 		second_saved_item = saved_items[1]
 		self.assertEqual(first_saved_item.text, 'The first (ever) list item')
 		self.assertEqual(second_saved_item.text, 'Item the second')
+
+class ListsViewTest(TestCase):
+
+	def test_uses_list_template(self):
+		response = self.client.get('/lists/the-only-list-in-the-world/')
+		self.assertTemplateUsed(response, 'list.html')
+
+	def test_displays_all_items(self):
+		Item.objects.create(text='itemey 1')
+		Item.objects.create(text='itemey 2')
+
+		# request = HttpRequest()
+		# response = view_list(request)
+		
+		# self.assertIn('itemey 1', response.content.decode())
+		# self.assertIn('itemey 2', response.content.decode())
+
+		# Instead of calling the view function directly, we use
+		# the Django test client, which is an attribute of the
+		# Django TestCase called self.client
+		response = self.client.get('/lists/the-only-list-in-the-world/')
+
+		# Django's assertContains method knows how to deal with
+		# responses and the bytes of their content (no need for .decode())
+		self.assertContains(response, 'itemey 1')
+		self.assertContains(response, 'itemey 2')
+
 		

@@ -6,10 +6,10 @@
 	<body 
 
 		<div class="page-header">
-			<h1>Start a new To-Do list</h1>
+			<h1>To Do (because Rebecca doesn't like hyphens!)</h1>
 		</div>
 		<div>
-			<form method="POST">
+			<form method="POST" action="/">
 				<input name="item_text" id="id_new_item" placeholder="Enter a to-do item" />
 				{% csrf_token %}
 			</form>
@@ -21,7 +21,7 @@
 				</tr>
 			</table>
 -->
-<!-- 
+
 			<table id="id_list_table">
 				{% for item in items %}
 				<tr>
@@ -29,7 +29,6 @@
 				</tr>
 				{% endfor %}
 			</table>
- -->
 		</div>
 	</body>
 </html>
