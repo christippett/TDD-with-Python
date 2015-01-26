@@ -43,27 +43,29 @@ from lists.models import Item
 # ITERATION 2
 # ======================
 def home_page(request):
-	if request.method == 'POST':
-		Item.objects.create(text=request.POST['item_text']) 
-		# return redirect('/')
-		return redirect('/lists/the-only-list-in-the-world/')
+	return render(request, 'home.html')
 
-	# a - code sample
+	# # The home_page view no longer handles new list creation
+	# if request.method == 'POST':
+	# 	Item.objects.create(text=request.POST['item_text']) 
+	# 	# return redirect('/')
+	# 	return redirect('/lists/the-only-list-in-the-world/')
+
+	# # Return the contents of the POST variable directly to template
+	# # (does not save to DB)
 	# return render(
 	# 	request, 
 	# 	'home.html',
 	# 	{'new_item_text': request.POST.get('item_text', ''),}
 	# )
 	
-	# b - code sample
+	# # Get all Items from database and load into template
 	# items = Item.objects.all()
 	# return render(
 	# 	request, 
 	# 	'home.html',
 	# 	{'items': items,}
 	# )
-
-	return render(request, 'home.html')
 
 def view_list(request):
 	items = Item.objects.all()
@@ -72,3 +74,7 @@ def view_list(request):
 		'list.html',
 		{'items': items,}
 	)
+
+def new_list(request):
+	Item.objects.create(text=request.POST['item_text']) 
+	return redirect('/lists/the-only-list-in-the-world/')
