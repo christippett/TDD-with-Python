@@ -2,6 +2,7 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import sys
 # import unittest
 
 # NB: unittest provides helper functions such as assertIn, 
@@ -11,6 +12,20 @@ from selenium.webdriver.common.keys import Keys
 
 class NewVisitorTest(StaticLiveServerTestCase): # Tests are organised into classes, which inherit from unittest.TestCase
 	
+	@classmethod
+	def setUpClass(cls):
+		for arg in sys.argv:
+			if 'liveserver' in arg:
+				cls.server_url = 'http://' + arg.split('=')[1]
+				return
+		super().setUpClass() # run the normal superclass setup
+		cls.server_url = cls.live_server_url
+
+	@classmethod
+	def tearDownClass(cls):
+		if cls.server_url == cls.live_server_url:
+			super().tearDownClass()
+
 	def setUp(self): # This method runs before each test
 		self.browser = webdriver.Firefox()
 		self.browser.implicitly_wait(3) # Force selenium to wait 3 seconds before continuing with the test
@@ -34,7 +49,7 @@ class NewVisitorTest(StaticLiveServerTestCase): # Tests are organised into class
 		# Edith has heard about a cool new online to-do app. She goes
 		# to check out its homepage
 # 		self.browser.get('http://localhost:8000')
-		self.browser.get(self.live_server_url)
+		self.browser.get(self.server_url)
 		
 		# She notices the page title and head mention to-do lists
 		self.assertIn('To-Do', self.browser.title)
@@ -94,7 +109,7 @@ class NewVisitorTest(StaticLiveServerTestCase): # Tests are organised into class
 		self.browser = webdriver.Firefox()
 		
 		# Francis visits the home page. There is no sign of Edith's list
-		self.browser.get(self.live_server_url)
+		self.browser.get(self.server_url)
 		page_text = self.browser.find_element_by_tag_name('body').text
 		self.assertNotIn('buy peacock feathers', page_text)
 		self.assertNotIn('make a fly', page_text)
@@ -119,7 +134,7 @@ class NewVisitorTest(StaticLiveServerTestCase): # Tests are organised into class
 
 	def test_layout_and_styling(self):
 		# Edith goes to the home page
-		self.browser.get(self.live_server_url)
+		self.browser.get(self.server_url)
 		self.browser.set_window_size(1024, 768)
 
 		# She notices the input box is nicely centered
