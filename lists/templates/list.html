@@ -1,34 +1,13 @@
-<html>
-	<header>
-		<title>To-Do lists</title>
-	</header>
-	
-	<body 
+{% extends 'base.html' %}
 
-		<div class="page-header">
-			<h1>To Do (because Rebecca doesn't like hyphens!)</h1>
-		</div>
-		<div>
-			<form method="POST" action="/lists/{{ list.id }}/add_item">
-				<input name="item_text" id="id_new_item" placeholder="Enter a to-do item" />
-				{% csrf_token %}
-			</form>
-			
-<!--
-			<table id="id_list_table">
-				<tr>
-					<td>1: {{ new_item_text }}</td>
-				</tr>
-			</table>
--->
+{% block header_text %}Your To-Do list{% endblock %}
 
-			<table id="id_list_table">
-				{% for item in list.item_set.all %}
-				<tr>
-					<td>{{ forloop.counter }}: {{ item.text }}</td>
-				</tr>
-				{% endfor %}
-			</table>
-		</div>
-	</body>
-</html>
+{% block form_action %}/lists/{{ list.id }}/add_item{% endblock %}
+
+{% block table %}
+    <table id="id_list_table">
+        {% for item in list.item_set.all %}
+            <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
+        {% endfor %}
+    </table>
+{% endblock %}
