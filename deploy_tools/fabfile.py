@@ -17,7 +17,7 @@ def deploy():
 
 def _create_directory_structure_if_necessary(site_folder):
 	for subfolder in ('database', 'static', 'virtualenv', 'source'):
-		run('mkdir -p %s/%s' % (site_folder), subfolder))
+		run('mkdir -p %s/%s' % (site_folder, subfolder))
 
 def _get_latest_source(source_folder):
 	# check whether repo has already been cloned into folder
@@ -55,4 +55,3 @@ def _update_static_files(source_folder):
 def _update_database(source_folder):
 	run('cd %s && ../virtualenv/bin/python3 manage.py migrate --noinput' % (source_folder))
 
-	
