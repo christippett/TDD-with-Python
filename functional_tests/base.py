@@ -3,6 +3,7 @@ from selenium import webdriver
 import sys
 
 class FunctionalTest(StaticLiveServerTestCase):
+	
 	@classmethod
 	def setUpClass(cls):
 		for arg in sys.argv:

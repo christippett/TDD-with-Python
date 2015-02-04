@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 class NewVisitorTest(FunctionalTest):
+	
 	def test_can_start_a_list_and_retrieve_it_later(self): # Any method whose name starts with 'test' is a test method, and will be run by the test runner. You can have more than one test_ method per class
 		
 		# NB: It is useful to write a story as to how the user will use
