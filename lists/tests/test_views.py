@@ -3,17 +3,7 @@ from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from lists.models import Item, List
-
-# Import view function
 from lists.views import home_page, view_list # home_page is the view function stored in lists/views.py
-
-# TestCase is an augmented version of the standard unittest.TestCase,
-# with some Django-specific features thrown in
-
-# class SmokeTest(TestCase):
-# 	
-# 	def test_bad_maths(self):
-# 		self.assertEqual(1 + 1, 3)
 
 class HomePageTest(TestCase):
 	
@@ -30,53 +20,6 @@ class HomePageTest(TestCase):
 		self.assertTrue(response.content.startswith(b'<!DOCTYPE html>'))
 		self.assertIn(b'<title>To-Do lists</title>', response.content)
 		self.assertTrue(response.content.endswith(b'</html>'))
-		
-		# NB: response.content is the HTML contents of the HttpResponse object
-		
-		# NB: response.content is in raw bytes, not a Python string, so
-		# we have to use the b'' syntax to compare them (converts string to bytes)
-		
-	# def test_home_page_only_saves_items_when_necessary(self):
-	# 	request = HttpRequest()
-	# 	home_page(request)
-	# 	self.assertEqual(Item.objects.count(), 0)
-		
-	# def test_home_page_displays_all_list_items(self):
-	# 	Item.objects.create(text='itemey 1')
-	# 	Item.objects.create(text='itemey 2')
-	# 	request = HttpRequest()
-	# 	response = home_page(request)
-	# 	self.assertIn('itemey 1', response.content.decode())
-	# 	self.assertIn('itemey 2', response.content.decode())
-		
-class ListAndItemModelTest(TestCase):
-	
-	def test_saving_and_retrieving_items(self):
-		list_ = List()
-		list_.save()
-
-		first_item = Item()
-		first_item.text = 'The first (ever) list item'
-		first_item.list = list_
-		first_item.save()
-		
-		second_item = Item()
-		second_item.text = 'Item the second'
-		second_item.list = list_
-		second_item.save()
-		
-		saved_list = List.objects.first()
-		self.assertEqual(saved_list, list_)
-
-		saved_items = Item.objects.all()
-		self.assertEqual(saved_items.count(), 2)
-		
-		first_saved_item = saved_items[0]
-		second_saved_item = saved_items[1]
-		self.assertEqual(first_saved_item.text, 'The first (ever) list item')
-		self.assertEqual(first_saved_item.list, list_)
-		self.assertEqual(second_saved_item.text, 'Item the second')
-		self.assertEqual(second_saved_item.list, list_)
 
 class ListsViewTest(TestCase):
 
