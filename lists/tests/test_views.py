@@ -10,21 +10,6 @@ from lists.forms import ItemForm
 
 
 class HomePageTest(TestCase):
-	# maxDiff = None
-
-	# def test_root_url_resolves_to_home_page_view(self):
-	# 	found = resolve('/') # function Django uses internally to resolve URLs and find what view function they should be mapped to
-	# 	self.assertEqual(found.func, home_page) # Check that resolve, when called with '/', finds a function called home_page
-		
-	# def test_home_page_returns_correct_html(self):
-	# 	request = HttpRequest() # An HttpRequest object, this is what Django sees when a user's browser asks for a page
-	# 	response = home_page(request) # We pass this request to our home_page view, which gives a reponse in form of an HttpResponse object
-	# 	expected_html = render_to_string('home.html', {'form': ItemForm()})
-	# 	self.assertMultiLineEqual(response.content.decode(), expected_html)
-		
-	# 	self.assertTrue(response.content.startswith(b'<!DOCTYPE html>'))
-	# 	self.assertIn(b'<title>To-Do lists</title>', response.content)
-	# 	self.assertTrue(response.content.endswith(b'</html>'))
 
 	def test_home_page_renders_home_template(self):
 		response = self.client.get('/')
@@ -68,20 +53,13 @@ class ListsViewTest(TestCase):
 		self.assertNotContains(response, 'other list item 1')
 		self.assertNotContains(response, 'other list item 2')
 
-		# # Old way of testing:
-		# request = HttpRequest()
-		# response = view_list(request)
-		
-		# self.assertIn('itemey 1', response.content.decode())
-		# self.assertIn('itemey 2', response.content.decode())
-
 	def test_can_save_a_POST_request_to_an_existing_list(self):
 		other_list = List.objects.create()
 		correct_list = List.objects.create()
 
 		self.client.post(
 			'/lists/%d/' % (correct_list.id,),
-			data={'item_text': 'A new item for an existing list'}
+			data={'text': 'A new item for an existing list'}
 		)
 
 		self.assertEqual(Item.objects.count(), 1)
@@ -95,7 +73,7 @@ class ListsViewTest(TestCase):
 
 		response = self.client.post(
 			'/lists/%d/' % (correct_list.id,),
-			data={'item_text': 'A new item for an existing list'}
+			data={'text': 'A new item for an existing list'}
 		)
 
 		self.assertRedirects(response, '/lists/%d/' % (correct_list.id,))
@@ -104,7 +82,7 @@ class ListsViewTest(TestCase):
 		list_ = List.objects.create()
 		response = self.client.post(
 			'/lists/%d/' % (list_.id),
-			data={'item_text': ''}
+			data={'text': ''}
 		)
 		self.assertEqual(response.status_code, 200)
 		self.assertTemplateUsed(response, 'list.html')
@@ -114,15 +92,9 @@ class ListsViewTest(TestCase):
 class NewListTest(TestCase):
 
 	def test_saving_a_POST_request(self):
-		# request = HttpRequest()
-		# request.method = 'POST'
-		# request.POST['item_text'] = 'A new list item'
-		
-		# response = home_page(request)
-
 		self.client.post(
 			'/lists/new',
-			data={'item_text': 'A new list item'}
+			data={'text': 'A new list item'}
 		)
 		
 		self.assertEqual(Item.objects.count(), 1)
@@ -132,20 +104,20 @@ class NewListTest(TestCase):
 	def test_redirects_after_POST(self):
 		response = self.client.post(
 			'/lists/new',
-			data={'item_text': 'A new list item'}
+			data={'text': 'A new list item'}
 		)
 		
 		new_list = List.objects.first()
 		self.assertRedirects(response, '/lists/%d/' % (new_list.id,))
 
 	def test_validation_errors_are_sent_back_to_home_page_template(self):
-		response = self.client.post('/lists/new', data={'item_text': ''})
+		response = self.client.post('/lists/new', data={'text': ''})
 		self.assertEqual(response.status_code, 200)
 		self.assertTemplateUsed(response, 'home.html')
 		expected_error = escape("You can't have an empty list item")
 		self.assertContains(response, expected_error)
 
 	def test_invalid_list_items_arent_saved(self):
-		self.client.post('/lists/new', data={'item_text': ''})
+		self.client.post('/lists/new', data={'text': ''})
 		self.assertEqual(List.objects.count(), 0)
 		self.assertEqual(Item.objects.count(), 0)		
