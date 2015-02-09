@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from lists.models import Item, List
 from django.core.exceptions import ValidationError
+from lists.forms import ItemForm
+from lists.models import Item, List
 # from django.http import HttpResponse # no longer needed since we're rendering page using template engine
 
 # Create your views here.
@@ -44,7 +46,7 @@ from django.core.exceptions import ValidationError
 # ITERATION 3
 # ======================
 def home_page(request):
-	return render(request, 'home.html')
+	return render(request, 'home.html', {'form': ItemForm()})
 
 	# # The home_page view no longer handles new list creation
 	# if request.method == 'POST':

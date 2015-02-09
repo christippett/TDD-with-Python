@@ -6,23 +6,33 @@ from lists.models import Item, List
 from lists.views import home_page, view_list # home_page is the view function stored in lists/views.py
 from django.utils.html import escape
 from unittest import skip
+from lists.forms import ItemForm
 
 
 class HomePageTest(TestCase):
-	
-	def test_root_url_resolves_to_home_page_view(self):
-		found = resolve('/') # function Django uses internally to resolve URLs and find what view function they should be mapped to
-		self.assertEqual(found.func, home_page) # Check that resolve, when called with '/', finds a function called home_page
+	# maxDiff = None
+
+	# def test_root_url_resolves_to_home_page_view(self):
+	# 	found = resolve('/') # function Django uses internally to resolve URLs and find what view function they should be mapped to
+	# 	self.assertEqual(found.func, home_page) # Check that resolve, when called with '/', finds a function called home_page
 		
-	def test_home_page_returns_correct_html(self):
-		request = HttpRequest() # An HttpRequest object, this is what Django sees when a user's browser asks for a page
-		response = home_page(request) # We pass this request to our home_page view, which gives a reponse in form of an HttpResponse object
-		expected_html = render_to_string('home.html')
-		self.assertEqual(response.content.decode(), expected_html)
+	# def test_home_page_returns_correct_html(self):
+	# 	request = HttpRequest() # An HttpRequest object, this is what Django sees when a user's browser asks for a page
+	# 	response = home_page(request) # We pass this request to our home_page view, which gives a reponse in form of an HttpResponse object
+	# 	expected_html = render_to_string('home.html', {'form': ItemForm()})
+	# 	self.assertMultiLineEqual(response.content.decode(), expected_html)
 		
-		self.assertTrue(response.content.startswith(b'<!DOCTYPE html>'))
-		self.assertIn(b'<title>To-Do lists</title>', response.content)
-		self.assertTrue(response.content.endswith(b'</html>'))
+	# 	self.assertTrue(response.content.startswith(b'<!DOCTYPE html>'))
+	# 	self.assertIn(b'<title>To-Do lists</title>', response.content)
+	# 	self.assertTrue(response.content.endswith(b'</html>'))
+
+	def test_home_page_renders_home_template(self):
+		response = self.client.get('/')
+		self.assertTemplateUsed(response, 'home.html')
+
+	def test_home_page_uses_item_form(self):
+		response = self.client.get('/')
+		self.assertIsInstance(response.context['form'], ItemForm)
 
 class ListsViewTest(TestCase):
 

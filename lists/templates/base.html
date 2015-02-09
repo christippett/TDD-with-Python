@@ -17,10 +17,11 @@
                 <h1>{% block header_text %}{% endblock %}</h1>
                 <form method="POST" action="{% block form_action %}{% endblock %}">
                     <div class="form-group{% if error %} has-error has-feedback{% endif %}">
-                        <input name="item_text" id="id_new_item"
+                        <!-- <input name="item_text" id="id_new_item"
                         		class="form-control input-lg"
     							placeholder="Enter a to-do item"
-                        />
+                        /> -->
+                        {{ form.text }}
                         {% if error %}
                         <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                         {% endif %}
