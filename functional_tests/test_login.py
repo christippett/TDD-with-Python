@@ -1,7 +1,9 @@
 from .base import FunctionalTest
 import time
 from selenium.webdriver.support.ui import WebDriverWait
+from unittest import skip
 
+@skip
 class LoginTest(FunctionalTest):
 
 	def switch_to_new_window(self, text_in_title):

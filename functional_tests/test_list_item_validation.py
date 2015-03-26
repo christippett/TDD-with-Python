@@ -3,6 +3,9 @@ from unittest import skip
 from time import sleep
 
 class ItemValidationTest(FunctionalTest):
+
+	def get_error_element(self):
+		return self.browser.find_element_by_css_selector('.has-error')
 	
 	def test_cannot_add_empty_list_items(self):
 		# Edith goes to the home page and accidently tries to submit
@@ -46,3 +49,17 @@ class ItemValidationTest(FunctionalTest):
 		self.check_for_row_in_list_table('1: Buy wellies')
 		errors = self.browser.find_elements_by_css_selector('.has-error')
 		self.assertIn("You've already got this in your list", [error.text for error in errors])
+
+	def test_error_messages_are_cleared_on_input(self):
+		# Edit starts a new list in a way that causes a validation error:
+		self.browser.get(self.server_url)
+		self.get_item_input_box().send_keys('\n')
+		error = self.get_error_element()
+		self.assertTrue(error.is_displayed())
+
+		# She starts typing in the input box to clear the error
+		self.get_item_input_box().send_keys('a')
+
+		# She is pleased that the error message disappears
+		error = self.get_error_element()
+		self.assertFalse(error.is_displayed())
