@@ -26,6 +26,12 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'accounts.User'
+AUTHENTICATION_BACKENDS = (
+    'accounts.authentication.PersonaAuthenticationBackend',
+)
+
+
 
 # Application definition
 
@@ -37,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'lists',
+    'accounts',
 )
 
 MIDDLEWARE_CLASSES = (
